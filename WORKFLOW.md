@@ -145,3 +145,88 @@ Lessons learned from `xinhaihou_umich` (18 papers, 243 citations). Use this as a
 - MDPI uses ISSN-based URLs, not journal-slug
 - Slug collisions when multiple papers share `<surname>_yx` pattern — use MD5-hash of title for fallback (handled by `scripts/move_chrome_downloads.py`)
 - `is_self_citation` from S2 is unreliable; cross-check via scholar's own `papers.yaml`
+
+## Filename → citation matching (move_chrome_downloads.py)
+
+`move_chrome_downloads.py` is responsible for routing a user's `~/Downloads/*.pdf`
+into the correct `citing_papers/<slug>/source/paper.pdf` slot. Real downloads
+have wildly inconsistent filenames; the matcher tries strategies in order and
+accepts the first that fires. If a download is not landing where expected,
+trace through these in order — usually the fix is a new fingerprint rule for
+the host or a new filename-shape fallback.
+
+1. **URL fingerprint match.** For every gs_pdf_url / gs_html_url / DOI / arXiv
+   on the citation, extract a publisher-specific identifier (PII for Elsevier,
+   document-id for IEEE, DOI suffix for ACS/Wiley/Springer, NNT/HAL id for
+   theses, etc.) and look for that string inside the lowercased filename.
+   Highest precision; tried first. New publishers go in `URL_FINGERPRINTS`.
+2. **Title-slug match against the filename** — for ACS/Wiley/Tandfonline
+   patterns where the filename is the cleaned title.
+   - Standard: ≥5 consecutive title-word probe inside the filename slug.
+   - **Truncated-filename fallback**: ProQuest names dissertations
+     `Title_Truncated_at_30_chars.pdf` (e.g. `LLM4SCM_A_Framework_for_Intel.pdf`
+     where "Intel" is "Intelligent…"). Accept if the filename's first 25
+     squashed chars are a prefix of the title's squashed form.
+   - **Short-title fallback**: titles with <5 tokens (e.g. "Learning Patterns
+     in Configuration") never reach the standard probe loop. Accept if the
+     full title squashed form (≥18 chars) appears as a substring in the
+     filename.
+   - **Non-ASCII title fallback**: Korean/Chinese/Cyrillic citations
+     (`PDTune: 파라미터 …`, `Least-to-Most 프롬프트 …`) lose almost all tokens
+     in normalization. When the title contains non-ASCII characters, accept
+     if the filename starts with the title's leading ASCII keyword.
+3. **PDF page-1 fallback.** When neither (1) nor (2) match, open the PDF and
+   try fingerprint + title match against its first page text. Catches:
+   - Generic filenames like `out.pdf`, `Wang.pdf`.
+   - Theses where the filename is an institutional code (`2025TLSES089.pdf`)
+     but the title and HAL id are printed on the cover.
+   - HAL deposit covers — the actual title is on page 2 because page 1 is the
+     HAL banner ("hal id…", "submitted on…", "to cite this version"). The
+     extractor combines pages 1+2 in that case.
+
+When you change matching logic, run `--dry-run` first; the manifest size +
+"matched + moved" tally tells you immediately if you over-broaden.
+
+## NBSP author-parser trap (ingest_gs_citations.py)
+
+Google Scholar emits non-breaking spaces (`\xa0`) around the dash separator
+in author/venue lines: `S Sheoran\xa0-\xa0Procedia Computer Science`. The
+original `parse_authors_line` split on the literal `" - "` (ASCII spaces) and
+left the venue glued onto the author string, contaminating ~78% of entries
+on the yunjiazhang_wisc onboarding run. Cascading effects:
+
+- Wrong author surnames break `slug_for()`, producing `_<doi>` (empty surname)
+  or junk surnames like `directions` (last word of the contaminated tail).
+- `is_self_citation` and lab-self-cite checks fail because collaborator
+  string match doesn't see clean names.
+- Year/venue extraction yields nothing because the dash split returned 1 part.
+
+The fix is in place (split on `\s+-\s+` after NBSP→space normalization).
+For previously-ingested data, run `scripts/repair_authors.py --slug <slug>`
+once — it re-parses each entry's authors_line from `gs_exports/`, updates
+the citation rows in place, and renames affected `citing_papers/` folders
+(e.g. `_<doi>` → `<surname>_<doi>`).
+
+## Reclassify-from-source matching pitfalls (reclassify_from_source.py)
+
+- **Bracket-numbered bibliographies.** `find_pdf_refnum` originally only
+  recognized `15. Author...` format; many CS papers (and most ScienceDirect
+  Procedia entries) use `[15] Author...`. Both are now accepted, and ref
+  bodies are sliced to the next ref header so multi-line entries no longer
+  bleed into the next ref's body.
+- **gs_extension-only citations have `s2_paper_id: null`.** When writing a
+  reclassification result back to citations.yaml, the writer originally did
+  `next(c for c in citations if c.s2_paper_id == citing.s2_paper_id)`. With
+  both sides None, that returns the **first** None-id row — almost never the
+  one you wanted, so the update silently lands on a different citation. The
+  writer now falls back to DOI / arxiv_id / fuzzy-title match when ids are
+  null. If a citation's classification stays `[needs_review]` despite the
+  citing paper being downloaded and ref number found, this null-match path
+  is the first place to check.
+- **ProQuest gateway returns the wrong PDF.** `https://search.proquest.com/openview/<hex>/1?...`
+  without SSO can return a generic preview that happens to be a *different*
+  paper (the dissertation matched by the search context, not the requested
+  one). One known case during yunjiazhang_wisc onboarding: B Hu's paper slot
+  ended up containing Yunjia's dissertation PDF. If the bib parser reports a
+  refnum that contradicts the file's title, suspect this and delete
+  `citing_papers/<bad_slug>/source/paper.pdf` before re-running the move.
