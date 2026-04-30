@@ -1,0 +1,19 @@
+name: Xinhai Hou
+affiliation: University of Michigan
+affiliation_short: umich
+slug: xinhaihou_umich
+
+ids:
+  google_scholar: v3UWeDMAAAAJ
+  google_scholar_url: https://scholar.google.com/citations?user=v3UWeDMAAAAJ
+  orcid: 0000-0002-6576-6264
+  semantic_scholar_author: "1784658702"  # warning: profile contains some name-conflated papers
+  openalex_author: A5036316753           # warning: profile contains some name-conflated papers
+
+# Source-of-truth note:
+# Google Scholar profile is canonical for "what's mine". S2/OpenAlex author profiles
+# under the name "Xinhai Hou" are partially conflated with materials-science authors
+# at Kunming/Chengdu. papers.yaml is built from the GS list and enriched per-paper
+# from S2.
+
+date_created: 2026-04-27

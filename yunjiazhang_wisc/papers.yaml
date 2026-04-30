@@ -1,0 +1,123 @@
+# Canonical paper list for Yunjia Zhang.
+# Source: Google Scholar profile (wVhOykcAAAAJ), enriched with Semantic Scholar metadata.
+# Order: GS default (citation count, descending). Tags follow ingest-paper convention:
+#   {short_slug}_{arxiv_id}  if arxiv-available
+#   {short_slug}_{year}      otherwise
+# `role` indicates Yunjia's authorship position (first_author / co_author).
+#
+# Note on duplicates: GS lists "Simple Adaptive Query Processing vs. Learned Query Optimizers"
+# twice — once as the 2023 CIDR conference paper and once as the 2025 VLDB Journal extension.
+# S2 conflates them under a single paperId (f7e14a3b4337). Kept as one entry (aqp_vs_lqo_2310.04514)
+# with venue="CIDR 2023 / VLDB Journal 2025"; the GS-export citation files 06 and 10 will both
+# merge into citation/aqp_vs_lqo_2023/.
+
+papers:
+  - tag: reactable_2310.00815
+    title: "ReAcTable: enhancing ReAct for table question answering"
+    year: 2023
+    venue: VLDB 2024 (arXiv preprint)
+    arxiv_id: "2310.00815"
+    doi: 10.48550/arXiv.2310.00815
+    s2_paper_id: 58219d9826f9ddde448c73e7ecc690111f5698f4
+    role: first_author
+
+  - tag: gptuner_2311.03157
+    title: "GPTuner: A manual-reading database tuning system via GPT-guided Bayesian optimization"
+    year: 2023
+    venue: VLDB 2024 (arXiv preprint)
+    arxiv_id: "2311.03157"
+    doi: 10.14778/3659437.3659449
+    s2_paper_id: 8ddb165278176f279ace760a8c14f5e0fcb652b0
+    role: co_author
+
+  - tag: smat_2023
+    title: "Schema matching using pre-trained language models"
+    year: 2023
+    venue: ICDE 2023
+    arxiv_id: null
+    doi: 10.1109/ICDE55515.2023.00123
+    s2_paper_id: a85c5d7272371345e28a9910080224cad799972e
+    role: first_author
+
+  - tag: fd_noisy_2020
+    title: "A statistical perspective on discovering functional dependencies in noisy data"
+    year: 2020
+    venue: SIGMOD 2020
+    arxiv_id: null
+    doi: 10.1145/3318464.3389749
+    s2_paper_id: 2596cce31e1b46cf7ea2d8292304bcf0166d17e0
+    role: first_author
+
+  - tag: gptuner_journal_2025
+    title: "GPTuner: An LLM-based database tuning system"
+    year: 2025
+    venue: ACM SIGMOD Record / VLDB Journal extension
+    arxiv_id: null
+    doi: 10.1145/3733620.3733641
+    s2_paper_id: 9ecac1503790281f6b446dee9653bafa446a6185
+    role: co_author
+
+  - tag: aqp_vs_lqo_2023
+    title: "Simple Adaptive Query Processing vs. Learned Query Optimizers: Observations and Analysis"
+    year: 2023
+    venue: CIDR 2023 (also VLDB Journal 34(5), 2025 extension)
+    arxiv_id: null
+    doi: 10.1007/s00778-025-00936-6
+    s2_paper_id: f7e14a3b43377dea6f7258b1933aaa8c9156c7fe
+    role: first_author
+    # GS lists conference (2023) and journal (2025) as separate rows; S2 dedupes them.
+    # Both citation files 06 and 10 from gs_exports/ feed into this tag.
+
+  - tag: diffusion_topology_2020
+    title: "Statistical Estimation of Diffusion Network Topologies"
+    year: 2020
+    venue: ICDE 2020
+    arxiv_id: null
+    doi: 10.1109/ICDE48307.2020.00060
+    s2_paper_id: ab401b7620b6f3f5dd321d9c7c2592dee0a568c6
+    role: co_author
+
+  - tag: gptuner_demo_2024
+    title: "A demonstration of GPTuner: A GPT-based manual-reading database tuning system"
+    year: 2024
+    venue: SIGMOD 2024 (Demo)
+    arxiv_id: null
+    doi: 10.1145/3626246.3654739
+    s2_paper_id: 8fa72afb51ca565a574cdd7bb614a6cc8041c7a9
+    role: co_author
+
+  - tag: diffusion_fast_inf_2019
+    title: "Fast inference algorithm of diffusion networks without infection temporal information"
+    year: 2019
+    venue: Journal of Software (Chinese)
+    arxiv_id: null
+    doi: null
+    s2_paper_id: null  # no S2 entry — Chinese-language journal
+    role: co_author
+
+  - tag: phd_thesis_2024
+    title: "Machine Learning for Data Analytics: Profiling, Querying, and Beyond"
+    year: 2024
+    venue: PhD Dissertation, University of Wisconsin–Madison
+    arxiv_id: null
+    doi: null
+    s2_paper_id: null  # dissertation not indexed in S2
+    role: first_author
+
+  - tag: lsm_patent_2023
+    title: "Linguistic schema mapping via semi-supervised learning"
+    year: 2023
+    venue: US Patent US20230385649A1
+    arxiv_id: null
+    doi: null
+    s2_paper_id: null  # patent — no S2 entry
+    role: co_author
+
+  - tag: transfer_qo_2022
+    title: "Can Transfer Learning be used to build a Query Optimizer?"
+    year: 2022
+    venue: CIDR 2022 (Abstract)
+    arxiv_id: null
+    doi: null
+    s2_paper_id: f228103b2bd9d9a34a7a6beec5713ff483c63cd0
+    role: first_author

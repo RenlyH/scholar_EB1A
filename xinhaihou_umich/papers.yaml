@@ -1,0 +1,169 @@
+# Canonical paper list for Xinhai Hou.
+# Source: Google Scholar profile (v3UWeDMAAAAJ), enriched with Semantic Scholar metadata.
+# Order: GS default (citation count, descending). Tags follow ingest-paper convention:
+#   {short_slug}_{arxiv_id}  if arxiv-available
+#   {short_slug}_{year}      otherwise
+# `role` indicates Xinhai's authorship position (first_author / co_author).
+
+papers:
+  - tag: glioma_foundation_2024
+    title: "Foundation models for fast, label-free detection of glioma infiltration"
+    year: 2024
+    venue: Nature
+    arxiv_id: null
+    doi: 10.1038/s41586-024-08169-3
+    s2_paper_id: 32fb8d10a364ee5c2e3ffbd99622caf25b690018
+    role: co_author
+
+  - tag: opensrh_2206.08439
+    title: "OpenSRH: optimizing brain tumor surgery using intraoperative stimulated Raman histology"
+    year: 2022
+    venue: NeurIPS
+    arxiv_id: "2206.08439"
+    doi: 10.48550/arXiv.2206.08439
+    s2_paper_id: 02cdaed649b4d4858f9cee08776f6f7da328c281
+    role: co_author
+
+  - tag: cns_lymphoma_2024
+    title: "Fast intraoperative detection of primary CNS lymphoma and differentiation from common CNS tumors using stimulated Raman histology and deep learning"
+    year: 2024
+    venue: Neuro-Oncology
+    arxiv_id: null
+    doi: 10.1093/neuonc/noae270
+    s2_paper_id: 209dae4be69780b9a2e1da0ae4e2b655ee6b8dea
+    role: co_author
+
+  - tag: hidisc_2303.01605
+    title: "Hierarchical Discriminative Learning Improves Visual Representations of Biomedical Microscopy"
+    year: 2023
+    venue: CVPR
+    arxiv_id: "2303.01605"
+    doi: 10.1109/CVPR52729.2023.01896
+    s2_paper_id: a3e939e1f206e75508c8bd8dc0e08c30b5cc5d6b
+    role: co_author
+
+  - tag: valproic_2021
+    title: "Valproic acid-induced changes of 4D nuclear morphology in astrocyte cells"
+    year: 2021
+    venue: Molecular Biology of the Cell
+    arxiv_id: null
+    doi: 10.1091/mbc.e20-08-0502
+    s2_paper_id: 85694b480bbf2bf001231756e3941a52cde09833
+    role: co_author
+
+  - tag: slide_ssl_2402.06188
+    title: "A self-supervised framework for learning whole slide representations"
+    year: 2024
+    venue: arXiv
+    arxiv_id: "2402.06188"
+    doi: 10.48550/arXiv.2402.06188
+    s2_paper_id: a23374979c6ff797db5259a1be9b783d8766ad13
+    role: first_author
+
+  - tag: neuroimaging_health_2026
+    title: "Learning neuroimaging models from health system-scale data"
+    year: 2026
+    venue: Nature Biomedical Engineering
+    arxiv_id: null
+    doi: 10.1038/s41551-025-01608-0
+    s2_paper_id: 79b12732efa5cb127780f3614392085eff3a0464
+    role: co_author
+
+  - tag: codev_2511.19661
+    title: "CodeV: Code with Images for Faithful Visual Reasoning via Tool-Aware Policy Optimization"
+    year: 2025
+    venue: arXiv
+    arxiv_id: "2511.19661"
+    doi: null
+    s2_paper_id: 46013423d5485e66ac580fc5c56a010cae11946b
+    role: first_author
+
+  - tag: step_diffusion_2403.13680
+    title: "Step-Calibrated Diffusion for Biomedical Optical Image Restoration"
+    year: 2025
+    venue: AAAI
+    arxiv_id: "2403.13680"
+    doi: 10.48550/arXiv.2403.13680
+    s2_paper_id: a12c69be20983c4bd9c782855d00f2e875b64614
+    role: co_author
+
+  - tag: lipt3d_2505.21862
+    title: "Towards Scalable Language-Image Pre-training for 3D Medical Imaging"
+    year: 2025
+    venue: TMLR
+    arxiv_id: "2505.21862"
+    doi: 10.48550/arXiv.2505.21862
+    s2_paper_id: 90b450153e9095c57ead2e8eb809526cafd1f055
+    role: co_author
+
+  - tag: correct_2509.24088
+    title: "CORRECT: COndensed eRror RECognition via knowledge Transfer in multi-agent systems"
+    year: 2025
+    venue: arXiv
+    arxiv_id: "2509.24088"
+    doi: null
+    s2_paper_id: 86cb80f627e867a9a47ff890eed11e4807d3d7fa
+    role: co_author
+
+  - tag: srvol_2404.09425
+    title: "Super-resolution of biomedical volumes with 2D supervision"
+    year: 2024
+    venue: CVPRW
+    arxiv_id: "2404.09425"
+    doi: 10.1109/CVPRW63382.2024.00690
+    s2_paper_id: 61ac1773aa919019d4f2dbf89c6c7d51f28675e9
+    role: co_author
+
+  - tag: neuroimaging_generalist_2511.18640
+    title: "Health system learning achieves generalist neuroimaging models"
+    year: 2025
+    venue: Research Square (preprint)
+    arxiv_id: "2511.18640"
+    doi: 10.21203/rs.3.rs-8166797/v1
+    s2_paper_id: d8224963d738bcf8809716e64ef10f15cb2397c1
+    role: co_author
+
+  - tag: virtual_staining_2507.05383
+    title: "Foreground-aware Virtual Staining for Accurate 3D Cell Morphological Profiling"
+    year: 2025
+    venue: arXiv
+    arxiv_id: "2507.05383"
+    doi: 10.48550/arXiv.2507.05383
+    s2_paper_id: c04b977f022827ca25aff8971cbe82be5cae2033
+    role: co_author
+
+  - tag: srh_cell_seg_2025
+    title: "Protocol to annotate and automate single-cell instance segmentation on stimulated Raman histology using deep learning"
+    year: 2025
+    venue: STAR Protocols
+    arxiv_id: null
+    doi: 10.1016/j.xpro.2025.104221
+    s2_paper_id: 90d6ea35385867ffa0f06361793bdc6755702f60
+    role: co_author
+
+  - tag: raman_spinal_2026
+    title: "AI-driven label-free Raman spectromics for intraoperative spinal tumor assessment"
+    year: 2026
+    venue: npj Digital Medicine
+    arxiv_id: null
+    doi: 10.1038/s41746-025-02279-6
+    s2_paper_id: 89d84e67ad5f67ad6528567b52eaff9db2563a50
+    role: co_author
+
+  - tag: intelligent_histology_2507.03037
+    title: "Intelligent histology for tumor neurosurgery"
+    year: 2026
+    venue: Neuro-Oncology Advances
+    arxiv_id: "2507.03037"
+    doi: 10.1093/noajnl/vdag065
+    s2_paper_id: 783533727ae15410b124705995901a78bb898716
+    role: first_author
+
+  - tag: spinal_abstract_2025
+    title: "P04.08. A NEAR REAL-TIME INTRAOPERATIVE CLASSIFICATION OF SPINAL TUMORS USING LABEL-FREE STIMULATED RAMAN HISTOLOGY AND ARTIFICIAL INTELLIGENCE"
+    year: 2025
+    venue: Neuro-Oncology (abstract)
+    arxiv_id: null
+    doi: null
+    s2_paper_id: 4718161948d7c2163bc5b69a72024f6ed01d58e1
+    role: co_author

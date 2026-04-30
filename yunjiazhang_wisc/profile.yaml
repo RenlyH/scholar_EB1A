@@ -1,0 +1,44 @@
+name: Yunjia Zhang
+affiliation: "Databricks (PhD: University of Wisconsin–Madison)"
+affiliation_short: wisc
+slug: yunjiazhang_wisc
+
+ids:
+  google_scholar: wVhOykcAAAAJ
+  google_scholar_url: https://scholar.google.com/citations?user=wVhOykcAAAAJ&hl=en
+  orcid: null
+  semantic_scholar_author: null  # author search returned only conflated profiles; resolved per-paper instead
+  openalex_author: A5010380683   # University of Wisconsin–Madison; works_count=8
+
+# Source-of-truth note:
+# Google Scholar profile (wVhOykcAAAAJ) is canonical for "what's mine". S2 author search
+# for "Yunjia Zhang" returned multiple homonym profiles (medical, transit, etc.); none
+# matched cleanly. papers.yaml is built from the GS list (13 entries) and enriched
+# per-paper via S2 paper search. OpenAlex A5010380683 is correctly disambiguated.
+
+# Lab / collaborator structure (for self-cite + lab-self-cite detection):
+#   Co-advisors at UW–Madison: Theodore (Theo) Rekatsinas, Jignesh M. Patel
+#   MSR Gray Systems Lab collaborators: Avrilia Floratou, Joyce Cahoon, Subramaniam Krishnan
+#   Lab peers: Yannis Chronis, Jonas Henkel, Shaleen Deep
+collaborators:
+  - Theodore Rekatsinas
+  - Theo Rekatsinas
+  - T Rekatsinas
+  - Jignesh M. Patel
+  - Jignesh Patel
+  - JM Patel
+  - Avrilia Floratou
+  - A Floratou
+  - Joyce Cahoon
+  - Joyce Yu Cahoon
+  - J Cahoon
+  - Subramaniam Krishnan
+  - S Krishnan
+  - Yannis Chronis
+  - Y Chronis
+  - Jonas Henkel
+  - J Henkel
+  - Shaleen Deep
+  - S Deep
+
+date_created: 2026-04-29
