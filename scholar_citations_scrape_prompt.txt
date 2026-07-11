@@ -1,0 +1,74 @@
+# Task: Scrape Google Scholar Citing Papers and Generate Markdown Files
+
+## Context
+I have a Google Scholar author profile open in my browser. I want you to scrape, for each of the author's publications (except those with 0 citations), the full list of papers that cite it, and produce one markdown file per source paper.
+
+## What to do
+
+1. If the publication list is incomplete, click "Show more" to expand the full publications list if there are are .
+
+2. Identify every paper that has at least 1 citation. Skip any paper with 0 citations.
+
+3. For each qualifying paper, in order from most-cited to least-cited:
+   a. Click the "Cited by N" link next to that paper (use a JavaScript click via the row's title-text match, e.g. document.querySelector('.gsc_a_at') containing a unique substring of the title - this is more reliable than coordinate clicks).
+   b. On the citing-papers results page, scrape every result on the current page. For each result, capture:
+      - title (from h3 a)
+      - meta line / authors+venue (from .gs_a)
+      - htmlLink (the h3 anchor's href - the main link to the paper, usually publisher HTML page or arXiv abstract)
+      - pdfLink (from .gs_or_ggsm a, when present - direct PDF link)
+   c. If there's a "Next" pagination button (button.gs_btnPR that is not disabled), click it, wait ~2 seconds, scrape again, and append. Repeat until there's no next page. Persist accumulated data in sessionStorage under a key like "__all" so it survives page navigations.
+   d. After all citing papers are collected, generate a markdown file with this structure:
+
+      # Papers Citing "<original paper title>"
+      Original paper: <author list, venue, year>
+
+      ## Citing Papers (<N>)
+
+      1. **<title>**
+         - <meta line>
+         - HTML: <htmlLink>
+         - PDF: <pdfLink>   (omit this line if no PDF link)
+
+      2. ...
+
+   e. Trigger a browser download of that markdown file using a Blob + temporary <a download> element. Name files with a numeric prefix matching the citation-rank order, e.g.:
+      - 01_foundation_models_glioma_citations.md
+      - 02_opensrh_citations.md
+      - ...
+   f. Clear sessionStorage["__all"] before moving to the next paper.
+
+4. Navigate back to the profile page between papers (a fresh navigate is more reliable than browser back).
+
+## Important implementation notes
+- Coordinate-based clicks on Google Scholar's "Cited by N" links are flaky. Prefer a JavaScript-based click that finds the row by title substring and then clicks its a.gsc_a_ac link. Example:
+    document.querySelectorAll('#gsc_a_b .gsc_a_tr')
+    Find the row where .gsc_a_at textContent contains a unique substring of the target title, then row.querySelector('a.gsc_a_ac').click()
+- Some hash IDs that look like base64 may get blocked when read via JS output filters. Avoid logging full URLs/hrefs back through tool output - just click them in-page instead.
+- After each next-page click, wait ~2 seconds before scraping (page navigates, not AJAX).
+- Per-page scrape function:
+    const items = document.querySelectorAll('#gs_res_ccl_mid .gs_r.gs_or');
+    Array.from(items).map(el => ({
+      title: el.querySelector('h3 a')?.textContent.trim() || '',
+      htmlLink: el.querySelector('h3 a')?.href || '',
+      pdfLink: el.querySelector('.gs_or_ggsm a')?.href || '',
+      meta: el.querySelector('.gs_a')?.textContent.trim() || ''
+    }))
+- Persist between page loads using sessionStorage:
+    const prev = JSON.parse(sessionStorage.getItem('__all') || '[]');
+    sessionStorage.setItem('__all', JSON.stringify(prev.concat(newResults)));
+- Detect end of pagination: no enabled button.gs_btnPR.
+- Download via Blob:
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+## Output
+At the end, give me a summary table listing each filename, the source paper title, and the number of citing papers captured. Confirm all files have been downloaded.
+
+## Scope reminders
+- Skip papers with 0 citations.
+- For each qualifying paper, capture ALL citing papers (paginate to the end - do not cap).
+- Each citing paper entry must include at least one direct link (HTML, and PDF when available).
