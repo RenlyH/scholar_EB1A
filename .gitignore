@@ -8,7 +8,6 @@ __pycache__/
 
 # Heavy per-scholar derived data (regenerable from scripts + GS exports + S2)
 */citing_papers/
-*/gs_exports/
 */citation/
 */digest/
 */publications/

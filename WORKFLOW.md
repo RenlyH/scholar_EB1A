@@ -81,6 +81,104 @@ uv run --with pyyaml scripts/move_chrome_downloads.py
 uv run --with pyyaml --with pypdf scripts/reclassify_from_source.py
 ```
 
+## Refreshing gs_exports for a scholar already set up
+
+Recurring task: the scholar has accumulated new citations and `gs_exports/` is
+stale. Everything needed is checked in — `scripts/gs_cited_by_scrape.js`
+(browser side) and `scripts/merge_gs_exports.py` (disk side). Budget ~20 min
+for a scholar with ~300 citations.
+
+```
+1. delta check   → which papers actually moved
+2. scrape        → browser, one call per paper
+3. merge         → union into gs_exports/, never overwrite
+4. re-ingest     → back onto the normal pipeline
+```
+
+**1. Delta check.** Open the profile with a big page size so nothing is hidden
+behind "Show more":
+
+```
+https://scholar.google.com/citations?user=<GS_ID>&hl=en&pagesize=100&sortby=pubdate
+```
+
+Evaluate `scripts/gs_cited_by_scrape.js` in the page, then `__counts()` for live
+per-paper counts. Compare against what's on disk — the recorded count is the
+`## Citing Papers (N)` header, and it is trustworthy (verify with
+`grep -c '^[0-9]*\. \*\*'`):
+
+```bash
+grep -H '## Citing Papers' <slug>/gs_exports/*.md
+```
+
+Rescrape only the papers whose live count exceeds the recorded one, plus any
+paper on the profile with **no export file at all** — new papers are the easiest
+thing to miss, since a count diff can't reveal a file that doesn't exist.
+
+**2. Scrape.** Per paper, one call, combining collect + write:
+
+```js
+await __scrape('distinctive substring of the title');   // 5s/page default
+__dl('NN_short_slug_citations.md', 'Full Title', 'Authors. Venue, Year.');
+```
+
+Files land in `~/Downloads`. Keep the existing `NN_` numbering for papers that
+already have a file; continue the sequence for new ones.
+
+**3. Merge.** Never overwrite — see the gotcha below:
+
+```bash
+uv run scripts/merge_gs_exports.py --slug <slug> --dry-run   # inspect the table
+uv run scripts/merge_gs_exports.py --slug <slug>             # writes + verifies
+```
+
+It prints before/after/new per file and runs an integrity check (header count
+matches entries, contiguous numbering, no duplicate titles, no leftover
+badges). Re-running is safe.
+
+**4. Re-ingest** — from here it's the normal pipeline:
+
+```bash
+mv ~/Downloads/*_citations.md <slug>/gs_exports/    # only if you skipped step 3's --src
+uv run --with pyyaml scripts/ingest_gs_citations.py
+# then discover-citations → classify-citations → reclassify-from-source
+```
+
+### Refresh gotchas
+
+- **A fresh scrape is not a superset of the old one.** GS re-clusters its
+  "Cited by" sets between queries. On the 2026-07-19 xinhaihou refresh, a
+  130-result scrape of the Nature glioma paper was missing **22 papers that the
+  existing 101-entry export had**. Overwriting loses them silently. Always
+  merge by normalized title. The corollary: the union legitimately drifts above
+  the live GS citation count as time passes — that is not a bug, do not
+  truncate to match GS.
+- **`[PDF]` / `[HTML]` badge prefixes.** `h3.textContent` is
+  `"\n  [PDF] Real Title"` — leading whitespace before the badge. A strip regex
+  anchored `^\[` misses it, ~20% of entries get stored as `[PDF] Title`, and
+  each one then fails to dedupe against the same paper already in the file, so
+  the merge quietly doubles them. Both the scraper and the merger strip
+  `^\s*\[[A-Z]+\]\s*`; the merger's integrity check fails loudly if one leaks.
+- **CAPTCHA.** Scholar blocked the session after ~120 page fetches at 1.8s
+  spacing; 5s spacing (the default) went the rest of the way untouched. When it
+  trips, **the user must click the reCAPTCHA in Chrome** — it can't be
+  automated, and no amount of retrying clears it. `__probe()` tells you whether
+  you're still blocked; `__resume()` picks up where the run stopped, because
+  progress is written to sessionStorage after every page.
+- **One paper, several GS rows.** GS lists preprint and journal versions as
+  separate rows with separate citation counts (CNS lymphoma had three: journal
+  15, a 0-cite duplicate, medRxiv 11). `papers.yaml` has one tag for it, so
+  scrape each row via `__scrape(sub, occurrence)` and fold them into one file:
+  `--fold-in 18_x_medrxiv_citations.md=03_x_citations.md`. The merge dedupes
+  the overlap.
+- **Titles drift.** Papers move preprint → journal and the GS title changes
+  ("Health system learning *achieves*" → "*enables*" generalist neuroimaging
+  models, arXiv → Nature Medicine). Match rows on a distinctive *substring*,
+  and when a profile row has no counterpart in `papers.yaml`, decide
+  explicitly whether it's a new tag or a version of an existing one.
+- `gs_exports/` is **gitignored** (`.gitignore:11`), so none of this shows up
+  in `git status`. Don't take a clean tree as evidence the refresh did nothing.
+
 ## Validation results (2026-04-27, scholar=xinhaihou_umich)
 
 After full pipeline run on 18 papers:

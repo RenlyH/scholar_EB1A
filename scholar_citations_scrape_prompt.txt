@@ -1,4 +1,11 @@
 # Task: Scrape Google Scholar Citing Papers and Generate Markdown Files
+#
+# NOTE (2026-07-19): for a scholar whose gs_exports/ already exists, prefer the
+# refresh path in WORKFLOW.md ("Refreshing gs_exports for a scholar already set
+# up") — scripts/gs_cited_by_scrape.js + scripts/merge_gs_exports.py. It fetches
+# pages instead of clicking "Next" (survives CAPTCHAs), and merges rather than
+# overwrites, which matters because a fresh scrape is NOT a superset of the old
+# one. This prompt remains the first-time / from-scratch procedure.
 
 ## Context
 I have a Google Scholar author profile open in my browser. I want you to scrape, for each of the author's publications (except those with 0 citations), the full list of papers that cite it, and produce one markdown file per source paper.
